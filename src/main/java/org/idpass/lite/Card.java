@@ -192,6 +192,19 @@ public class Card {
     }
 
     /**
+     * Match the face template with the one in the card.
+     * If it match access to the private part of the card is given.
+     * @param photo template of the card holder
+     * @throws CardVerificationException custom exception
+     * @throws InvalidCardException custom exception
+     */
+    public void authenticateWithFaceTemplate(byte[] photo) throws CardVerificationException, InvalidCardException {
+        byte[] buf = this.reader.verifyCardWithFaceTemplate(photo, cardAsByte);
+
+        verifyAuth(buf);
+    }
+
+    /**
      * Match the face present in the photo with the one in the card.
      * If it match access to the private part of the card is given.
      * @param photo of the card holder

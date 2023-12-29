@@ -584,6 +584,42 @@ public class TestCases {
         assertEquals(17, card.getDateOfBirth().getDate());
         assertEquals(12, card.getDateOfBirth().getMonth() + 1);
         assertEquals(1980, card.getDateOfBirth().getYear() + 1900);
+    }  
+
+    @Test
+    @DisplayName("Test card authentication with card owner's photo template")
+    public void testFaceTemplate() throws IOException, IDPassException {
+        // Initialize reader with default test keyset, no root certificates
+        IDPassReader reader = new IDPassReader(m_keyset, null);
+        // Generate a test card with Manny's photo in it
+        Card card = newTestCard(reader);
+        try {
+            // Authenticating to card with a different person's face should fail
+            byte[] photo = Files.readAllBytes(Paths.get("testdata/brad.jpg"));
+            byte[] photoTemplate = reader.getFaceTemplate(photo, true);
+            card.authenticateWithFaceTemplate(photo);
+            assertTrue(false);
+        } catch (CardVerificationException e) {}
+
+        try {
+            // Authenticating to card with a card owner's photo should succeed
+            byte[] photo = Files.readAllBytes(Paths.get("testdata/manny1.bmp"));
+            byte[] photoTemplate = reader.getFaceTemplate(photo, true);
+            card.authenticateWithFaceTemplate(photo);
+        } catch (CardVerificationException e) {
+            assertTrue(false);
+        }
+
+        //reset the card.
+        card = newTestCard(reader);
+        try {
+            // Authenticating to card with a card owner's photo should succeed
+            byte[] photo = Files.readAllBytes(Paths.get("testdata/manny4.jpg"));
+            byte[] photoTemplate = reader.getFaceTemplate(photo, true);
+            card.authenticateWithFaceTemplate(photo);
+        } catch (CardVerificationException e) {
+            assertTrue(false);
+        }
     }
 
     @Test

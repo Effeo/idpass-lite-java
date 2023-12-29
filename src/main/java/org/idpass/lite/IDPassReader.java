@@ -187,6 +187,21 @@ public class IDPassReader {
     }
 
     /**
+     * Given a photo template and the card content represented by eSignedCard,
+     * this method returns the serialized bytes of a SignedIDPassCard
+     * protobuf message object. A matching face recognition and valid
+     * verification key are the prerequisites.
+     * @param photo The card owner's photo template
+     * @param eSignedCard The EncryptedCard part of the card as byte[]
+     * @return This returns the SignedIDPassCard of the card owner as byte[] if the face match or an empty array
+     */
+    protected byte[] verifyCardWithFaceTemplate(byte[] photo, byte[] eSignedCard) {
+        byte[] buf = verify_card_with_face_template(ctx, photo, eSignedCard);
+
+        return buf;
+    }
+
+    /**
      * Given a photo and the card content represented by eSignedCard,
      * this method returns the serialized bytes of a SignedIDPassCard
      * protobuf message object. A matching face recognition and valid
@@ -345,6 +360,7 @@ public class IDPassReader {
             byte[] ident);
 
     private native byte[] verify_card_with_face(long ctx, byte[] photo, byte[] ecard);
+    private native byte[] verify_card_with_face_template(long ctx, byte[] photoTemplate, byte[] ecard);
     private native byte[] verify_card_with_pin(long ctx, String pin, byte[] ecard);
     private native byte[] encrypt_with_card(long ctx, byte[] ecard, byte[] data);
     private native byte[] decrypt_with_card(long ctx, byte[] ecard, byte[] data);
