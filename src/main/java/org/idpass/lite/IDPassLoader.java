@@ -252,9 +252,10 @@ public class IDPassLoader
         File innerJarFile = getFileFromJar(outerJar, tempDir,innerJar);
         return innerJarFile.toURI().toURL();
     }
-
+    
     public static boolean loadLibrary()
-    {
+    {   
+        System.out.println("java.library.path: " + System.getProperty("java.library.path"));
         String idpasslib = "";
         String osName = System.getProperty("os.name");
         if (osName.startsWith("Linux")) {
@@ -307,8 +308,17 @@ public class IDPassLoader
             // A signature can be embedded into the shared library
             // For example: `strings /path/to/libidpasslite.so | grep DXTRACKER`
             // returns the github commit hash where the library gets built
-            System.load(idpasslibFullPath);
+            System.out.println("idPassLib path: " + idpasslibFullPath);
+            try{
+                System.load(idpasslibFullPath);
 
+            }
+            catch(UnsatisfiedLinkError e){
+                System.out.println("Exception: " + e.getMessage());
+                System.out.println("Trying to load from java.library.path");
+                System.loadLibrary("idpasslite");
+            }
+            System.out.println("Native library loaded:" + IDPassLoader.isLibraryLoaded(idpasslibFullPath));
             String temppath;
             String s[];
 
@@ -326,12 +336,20 @@ public class IDPassLoader
             }
 
             return true;
-
         } catch (Exception e) {
-
+            System.out.println("Exception: " + e.getMessage());
         }
 
         return false;
+    }
+
+    public static boolean isLibraryLoaded(String libraryName) {
+        try {
+            System.load(libraryName);
+            return true;
+        } catch (UnsatisfiedLinkError e) {
+            return false;
+        }
     }
 
     private static void requestDeletion(File dir) {

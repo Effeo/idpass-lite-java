@@ -18,6 +18,7 @@
 
 plugins {
     id 'java-library'
+    id 'java'
     id 'application'
     id 'signing'
     id 'maven'
@@ -84,12 +85,13 @@ protobuf {
 
 test {
     useJUnitPlatform()
+    systemProperty "java.library.path", "/home/franc/Java/idpass-lite-java/bin/main/linux64/"
 }
 
 // Dependencies
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
     //////////////// idpass //////////////////////
     implementation 'com.google.protobuf:protobuf-java:3.12.2'
