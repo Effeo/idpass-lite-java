@@ -599,16 +599,18 @@ public class TestCases {
             byte[] photoTemplate = reader.getFaceTemplate(photo, true);
             card.authenticateWithFaceTemplate(photo);
             assertTrue(false);
-        } catch (CardVerificationException e) {}
+        } catch (CardVerificationException e) {
+            assertTrue(true);
+        }
 
         try {
             // Authenticating to card with a card owner's photo should succeed
             byte[] photo = Files.readAllBytes(Paths.get("testdata/manny1.bmp"));
             byte[] photoTemplate = reader.getFaceTemplate(photo, true);
-            card.authenticateWithFaceTemplate(photo);
+            card.authenticateWithFaceTemplate(photoTemplate);
             assertTrue(true);
         } catch (CardVerificationException e) {
-            
+            assertTrue(false);
         }
 
         //reset the card.
@@ -617,8 +619,10 @@ public class TestCases {
             // Authenticating to card with a card owner's photo should succeed
             byte[] photo = Files.readAllBytes(Paths.get("testdata/manny4.jpg"));
             byte[] photoTemplate = reader.getFaceTemplate(photo, true);
-            card.authenticateWithFaceTemplate(photo);
+            card.authenticateWithFaceTemplate(photoTemplate);
+            assertTrue(true);
         } catch (CardVerificationException e) {
+            assertTrue(false);
         }
     }
 
